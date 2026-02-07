@@ -206,3 +206,18 @@ T-013が完了しました。
 
 === END T-013 (exit: 0, 2026-02-07 14:20:35) ===
 === START T-014 (2026-02-07 14:20:35) ===
+T-014完了しました。
+
+**実装内容**: `src/windows_capture_mcp/capture.py` に `capture_rect(x, y, width, height) -> Image.Image` 関数を実装しました。
+- Win32 GDI API (`GetDesktopWindow`, `GetWindowDC`, `CreateCompatibleDC`, `CreateCompatibleBitmap`, `BitBlt`) を使用して画面の指定矩形をキャプチャ
+- キャプチャ結果をPillow Imageとして返却
+- GDIリソース（DC、ビットマップ等）の適切な解放処理を実装
+- 不正なサイズ（0以下）に対するバリデーション付き
+
+
+コミット完了: `task T-014`
+OK
+
+
+=== END T-014 (exit: 0, 2026-02-07 14:23:10) ===
+=== START T-015 (2026-02-07 14:23:10) ===

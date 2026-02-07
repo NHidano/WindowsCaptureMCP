@@ -57,3 +57,29 @@ def capture_rect(x: int, y: int, width: int, height: int) -> Image.Image:
     win32gui.DeleteObject(bmp.GetHandle())
 
     return img
+
+
+def capture_window_image(hwnd: int) -> Image.Image:
+    """Capture a window by its handle and return as a Pillow Image.
+
+    Args:
+        hwnd: Window handle.
+
+    Returns:
+        A Pillow Image of the captured window.
+
+    Raises:
+        ValueError: If the hwnd is invalid.
+    """
+    if not win32gui.IsWindow(hwnd):
+        raise ValueError(f"Invalid window handle: {hwnd}")
+
+    rect = win32gui.GetWindowRect(hwnd)
+    x, y, right, bottom = rect
+    width = right - x
+    height = bottom - y
+
+    if width <= 0 or height <= 0:
+        raise ValueError(f"Window has no visible area: {width}x{height}")
+
+    return capture_rect(x, y, width, height)
