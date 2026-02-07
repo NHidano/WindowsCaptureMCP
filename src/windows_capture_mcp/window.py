@@ -81,3 +81,29 @@ def list_windows(
 
     win32gui.EnumWindows(_enum_callback, None)
     return results
+
+
+def focus_window(hwnd: int) -> dict:
+    """Bring a window to the foreground.
+
+    Args:
+        hwnd: Window handle.
+
+    Returns:
+        Dict with status information.
+
+    Raises:
+        ValueError: If the hwnd is invalid.
+    """
+    if not win32gui.IsWindow(hwnd):
+        raise ValueError(f"Invalid window handle: {hwnd}")
+
+    # If the window is minimized, restore it first
+    if win32gui.IsIconic(hwnd):
+        win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+
+    win32gui.SetForegroundWindow(hwnd)
+    win32gui.BringWindowToTop(hwnd)
+
+    title = win32gui.GetWindowText(hwnd)
+    return {"hwnd": hwnd, "title": title, "status": "focused"}

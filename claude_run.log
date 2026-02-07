@@ -116,3 +116,17 @@ git add -A && git commit -m "task T-007"
 
 === END T-007 (exit: 0, 2026-02-07 14:11:38) ===
 === START T-008 (2026-02-07 14:11:38) ===
+T-008 完了しました。
+
+**実装内容:**
+- `src/windows_capture_mcp/window.py` に `list_windows(filter: str | None = None, include_hidden: bool = False) -> list[dict]` を実装
+- Win32 API (`EnumWindows`, `GetWindowText`, `GetWindowRect`, `IsWindowVisible`) を使用してウィンドウを列挙
+- `GetWindowThreadProcessId` + `QueryFullProcessImageNameW` でプロセス名を取得
+- 返却情報: `hwnd`, `title`, `process_name`, `x`, `y`, `width`, `height`
+- フィルタ: 部分一致・大文字小文字無視
+- デフォルト: 可視ウィンドウのみ（タイトルが空のものは除外）
+コミット完了: `5df27d8` (task T-008)
+
+
+=== END T-008 (exit: 0, 2026-02-07 14:13:36) ===
+=== START T-009 (2026-02-07 14:13:36) ===
