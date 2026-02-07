@@ -20,3 +20,60 @@ OK
 
 === END T-001 (exit: 0, 2026-02-07 13:59:26) ===
 === START T-002 (2026-02-07 13:59:26) ===
+T-002 完了しました。
+
+**作成したファイル:**
+- `src/windows_capture_mcp/server.py` - MCPサーバーのスケルトン（`main()` 関数定義済み）
+- `src/windows_capture_mcp/capture.py` - キャプチャモジュールのスケルトン
+- `src/windows_capture_mcp/window.py` - ウィンドウ操作モジュールのスケルトン
+- `src/windows_capture_mcp/__init__.py` - パッケージ初期化
+- `src/windows_capture_mcp/display.py` - ディスプレイ情報モジュールのスケルトン
+- `tests/test_window.py` - ウィンドウテスト（空）
+- `tests/__init__.py` - テストパッケージ初期化
+- `tests/test_display.py` - ディスプレイテスト（空）
+コミット `8fe9a24` で `task T-002` としてコミット済みです。
+- `tests/test_capture.py` - キャプチャテスト（空）
+
+
+=== END T-002 (exit: 0, 2026-02-07 14:00:35) ===
+=== START T-003 (2026-02-07 14:00:35) ===
+Error: Reached max turns (60)
+
+=== END T-003 (exit: 0, 2026-02-07 14:03:58) ===
+=== START T-004 (2026-02-07 14:03:58) ===
+承認が得られないためコマンドが実行できていません。Bashコマンドの実行を許可してください。実行したいのは以下です：
+
+1. **`uv run pytest`** ? テスト実行（完了条件の確認）
+2. **`git add -A && git commit -m "task T-004"`** ? 変更のコミット
+
+ファイルの変更自体は完了しています。`src/windows_capture_mcp/__init__.py` に以下の定数を定義しました：
+
+```python
+PREVIEW_QUALITY = 30
+PREVIEW_FORMAT = "jpeg"
+PREVIEW_MAX_LONG_SIDE = 1280
+DEFAULT_FORMAT = "png"
+DEFAULT_QUALITY = 90
+```
+
+=== END T-004 (exit: 0, 2026-02-07 14:04:55) ===
+=== START T-005 (2026-02-07 14:04:55) ===
+Bashコマンドの実行許可が繰り返し拒否されています。これ以上同じコマンドを試行しても意味がないため、一旦停止します。
+
+## T-005 実装完了（コード変更のみ）
+`src/windows_capture_mcp/display.py` に `get_displays() -> list[dict]` を実装しました。
+
+
+### 実装内容:
+- 返却する情報: `display_number`(1始まり), `name`, `width`, `height`, `x`, `y`, `scale_factor`, `is_primary`
+- `win32api.EnumDisplayMonitors` / `win32api.GetMonitorInfo` を使用してディスプレイ情報を取得
+- スケールファクターは `shcore.GetDpiForMonitor` (Windows 8.1+) で取得
+### 残作業（Bash許可が必要）:
+1. `uv run python -c "from windows_capture_mcp.display import get_displays; print(get_displays())"` で動作確認
+2. `git add -A && git commit -m "task T-005"` でコミット
+
+Bashコマンドの実行を許可していただければ、これらの残作業を完了できます。
+
+
+=== END T-005 (exit: 0, 2026-02-07 14:07:41) ===
+=== START T-006 (2026-02-07 14:07:41) ===
