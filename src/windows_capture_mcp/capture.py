@@ -8,6 +8,8 @@ import win32ui
 import win32con
 from PIL import Image
 
+from windows_capture_mcp.display import get_display_rect
+
 
 def capture_rect(x: int, y: int, width: int, height: int) -> Image.Image:
     """Capture a rectangle from the screen and return as a Pillow Image.
@@ -83,3 +85,40 @@ def capture_window_image(hwnd: int) -> Image.Image:
         raise ValueError(f"Window has no visible area: {width}x{height}")
 
     return capture_rect(x, y, width, height)
+
+
+def capture_fullscreen_image(display_number: int = 1) -> Image.Image:
+    """Capture the full screen of a specified display.
+
+    Args:
+        display_number: 1-based display number (default: 1).
+
+    Returns:
+        A Pillow Image of the full display.
+    """
+    x, y, width, height = get_display_rect(display_number)
+    return capture_rect(x, y, width, height)
+
+
+def capture_region_image(
+    x: int, y: int, width: int, height: int, display_number: int = 1
+) -> Image.Image:
+    """Capture a specific region relative to a display.
+
+    The x/y coordinates are relative to the specified display's top-left corner.
+    They are converted to absolute virtual desktop coordinates before capture.
+
+    Args:
+        x: Left coordinate relative to the display.
+        y: Top coordinate relative to the display.
+        width: Width in pixels.
+        height: Height in pixels.
+        display_number: 1-based display number (default: 1).
+
+    Returns:
+        A Pillow Image of the captured region.
+    """
+    disp_x, disp_y, _disp_w, _disp_h = get_display_rect(display_number)
+    abs_x = disp_x + x
+    abs_y = disp_y + y
+    return capture_rect(abs_x, abs_y, width, height)

@@ -221,3 +221,30 @@ OK
 
 === END T-014 (exit: 0, 2026-02-07 14:23:10) ===
 === START T-015 (2026-02-07 14:23:10) ===
+T-015 完了しました。
+
+**実装内容:**
+- `capture_window_image(hwnd: int) -> Image.Image` を `src/windows_capture_mcp/capture.py` に追加
+- `win32gui.GetWindowRect` でウィンドウ矩形を取得
+- ウィンドウの幅・高さが0以下の場合もエラー
+- `win32gui.IsWindow` で無効なhwndをチェックし `ValueError` を送出
+- 既存の `capture_rect` に委譲してキャプチャを実行
+
+OK
+
+=== END T-015 (exit: 0, 2026-02-07 14:24:37) ===
+=== START T-016 (2026-02-07 14:24:37) ===
+Bashコマンドの実行承認が得られない状態が続いています。これ以上同じコマンドを繰り返しても進まないため、状況を整理します。
+
+## T-016 実装状況
+
+
+**残りのステップ** (Bash承認が必要):
+**実装完了**: `src/windows_capture_mcp/capture.py` に `capture_fullscreen_image` 関数を追加しました。
+1. `uv run pytest tests/ -v` ? テスト実行で検証
+2. `git add -A && git commit -m "task T-016"` ? 変更をコミット
+
+Bashコマンドの実行許可設定をご確認いただくか、手動でこれらのコマンドを実行してください。
+
+=== END T-016 (exit: 0, 2026-02-07 14:26:54) ===
+=== START T-017 (2026-02-07 14:26:54) ===
