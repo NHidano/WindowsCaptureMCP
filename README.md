@@ -1,257 +1,102 @@
 # WindowsCaptureMCP
 
-Windows のスクリーンショットを撮影し、base64 形式で LLM に共有するための MCP サーバーです。
+An MCP (Model Context Protocol) server for capturing Windows screenshots and sharing them as base64-encoded images with LLMs.
 
-## 主な機能
+> **Windows only** — This package requires Windows and uses Win32 APIs for screen capture and window management.
 
-- ウィンドウ一覧の取得・フィルタリング
-- ウィンドウ単位 / フルスクリーン / 指定領域のスクリーンキャプチャ
-- 低画質プレビュー画像の生成（撮影領域の確認用）
-- ウィンドウ操作（フォーカス、最大化、リサイズ、移動）
-- マルチディスプレイ対応
-- PNG / JPEG / WebP 形式対応
+## Features
 
-## 必要環境
+- List and filter visible windows
+- Capture windows, full screen, or custom regions
+- Low-quality preview images for quick verification before full capture
+- Window management (focus, maximize, resize, move)
+- Multi-display support
+- PNG / JPEG / WebP output formats
 
-- Windows
-- Python 3.11 以上
-- [uv](https://docs.astral.sh/uv/)
+## Requirements
 
-## インストール
+- **Windows**
+- **Python >= 3.11**
+
+## Installation
 
 ```bash
-git clone <repository-url>
-cd WindowsCaptureMCP
-uv sync
+# Using uvx (recommended)
+uvx windows-capture-mcp
+
+# Using pip
+pip install windows-capture-mcp
 ```
 
-## MCP クライアントへの設定
-
-### Claude Desktop
-
-`claude_desktop_config.json` に以下を追加してください。
-
-```json
-{
-  "mcpServers": {
-    "windows-capture-mcp": {
-      "command": "uv",
-      "args": ["run", "--directory", "C:/path/to/WindowsCaptureMCP", "windows-capture-mcp"]
-    }
-  }
-}
-```
+## MCP Client Configuration
 
 ### Claude Code
 
-`settings.json` または `.mcp.json` に以下を追加してください。
+```bash
+claude mcp add windows-capture-mcp -s user -- uvx windows-capture-mcp
+```
+
+### Claude Desktop
+
+Add the following to your `claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
     "windows-capture-mcp": {
-      "command": "uv",
-      "args": ["run", "--directory", "C:/path/to/WindowsCaptureMCP", "windows-capture-mcp"]
+      "command": "uvx",
+      "args": ["windows-capture-mcp"]
     }
   }
 }
 ```
 
-> `C:/path/to/WindowsCaptureMCP` はリポジトリの実際のパスに置き換えてください。
+## Available Tools
 
-## 提供ツール一覧
+### Information
 
-### 情報取得
+| Tool | Description |
+|------|-------------|
+| `list_windows` | List visible windows with optional title filtering (case-insensitive) |
+| `list_displays` | List all connected displays with resolution, position, and scale info |
 
-| ツール名 | 説明 |
-|---|---|
-| `list_windows` | 表示中のウィンドウ一覧を取得（タイトルでのフィルタリング可） |
-| `list_displays` | 接続中のディスプレイ一覧を取得 |
+### Screen Capture (Full Quality)
 
-### スクリーンキャプチャ（フル画質）
+| Tool | Description |
+|------|-------------|
+| `capture_window` | Capture a specific window by handle |
+| `capture_fullscreen` | Capture an entire display |
+| `capture_region` | Capture a rectangular region |
 
-| ツール名 | 説明 |
-|---|---|
-| `capture_window` | ウィンドウハンドルを指定してキャプチャ |
-| `capture_fullscreen` | ディスプレイ全体をキャプチャ |
-| `capture_region` | 指定した矩形領域をキャプチャ |
+All capture tools support `format` (`"png"`, `"jpeg"`, `"webp"`) and `quality` (1-100) parameters.
 
-### プレビュー（低画質・軽量）
+### Preview (Lightweight)
 
-| ツール名 | 説明 |
-|---|---|
-| `preview_window` | ウィンドウの低画質プレビューを取得 |
-| `preview_fullscreen` | ディスプレイ全体の低画質プレビューを取得 |
-| `preview_region` | 指定領域の低画質プレビューを取得 |
+| Tool | Description |
+|------|-------------|
+| `preview_window` | Low-quality preview of a window |
+| `preview_fullscreen` | Low-quality preview of a display |
+| `preview_region` | Low-quality preview of a region |
 
-プレビューは JPEG 品質 30、長辺最大 1280px にリサイズされます。キャプチャ対象の確認に使用してください。
+Preview images are JPEG at quality 30, resized to max 1280px on the longest side. Use these to verify capture targets before taking full-quality screenshots.
 
-### ウィンドウ操作
+### Window Management
 
-| ツール名 | 説明 |
-|---|---|
-| `focus_window` | ウィンドウを前面に表示 |
-| `maximize_window` | ウィンドウを最大化 |
-| `resize_window` | ウィンドウのサイズを変更 |
-| `move_window` | ウィンドウの位置を変更 |
+| Tool | Description |
+|------|-------------|
+| `focus_window` | Bring a window to the foreground |
+| `maximize_window` | Maximize a window |
+| `resize_window` | Resize a window (keeps position) |
+| `move_window` | Move a window (keeps size) |
 
-## ツール詳細
-
-### list_windows
-
-表示中のウィンドウ一覧を取得します。
-
-**パラメータ:**
-
-| 名前 | 型 | 必須 | デフォルト | 説明 |
-|---|---|---|---|---|
-| `filter` | string | - | なし | タイトルの部分一致フィルタ（大文字小文字を区別しない） |
-| `include_hidden` | bool | - | false | 非表示ウィンドウも含める |
-
-**戻り値の例:**
-
-```json
-[
-  {
-    "hwnd": 12345,
-    "title": "README.md - Visual Studio Code",
-    "process_name": "Code.exe",
-    "x": 0,
-    "y": 0,
-    "width": 1920,
-    "height": 1080
-  }
-]
-```
-
-### list_displays
-
-接続中のディスプレイ一覧を取得します。
-
-**パラメータ:** なし
-
-**戻り値の例:**
-
-```json
-[
-  {
-    "display_number": 1,
-    "name": "\\\\.\\DISPLAY1",
-    "width": 1920,
-    "height": 1080,
-    "x": 0,
-    "y": 0,
-    "scale_factor": 1.0,
-    "is_primary": true
-  }
-]
-```
-
-### capture_window / capture_fullscreen / capture_region
-
-スクリーンキャプチャを撮影し、base64 エンコードされた画像を返します。
-
-**共通パラメータ:**
-
-| 名前 | 型 | 必須 | デフォルト | 説明 |
-|---|---|---|---|---|
-| `format` | string | - | "png" | 画像形式（"png" / "jpeg" / "webp"） |
-| `quality` | int | - | 90 | JPEG / WebP の品質（1〜100） |
-
-**capture_window 固有パラメータ:**
-
-| 名前 | 型 | 必須 | 説明 |
-|---|---|---|---|
-| `hwnd` | int | 必須 | ウィンドウハンドル（`list_windows` で取得） |
-
-**capture_fullscreen 固有パラメータ:**
-
-| 名前 | 型 | 必須 | デフォルト | 説明 |
-|---|---|---|---|---|
-| `display_number` | int | - | 1 | ディスプレイ番号（1始まり） |
-
-**capture_region 固有パラメータ:**
-
-| 名前 | 型 | 必須 | デフォルト | 説明 |
-|---|---|---|---|---|
-| `x` | int | 必須 | - | 左端の X 座標（ディスプレイ相対） |
-| `y` | int | 必須 | - | 上端の Y 座標（ディスプレイ相対） |
-| `width` | int | 必須 | - | 幅（ピクセル） |
-| `height` | int | 必須 | - | 高さ（ピクセル） |
-| `display_number` | int | - | 1 | ディスプレイ番号（1始まり） |
-
-### preview_window / preview_fullscreen / preview_region
-
-低画質のプレビュー画像を返します。パラメータはキャプチャ系ツールの固有パラメータと同じです（`format` / `quality` は指定不可）。
-
-### focus_window / maximize_window
-
-**パラメータ:**
-
-| 名前 | 型 | 必須 | 説明 |
-|---|---|---|---|
-| `hwnd` | int | 必須 | ウィンドウハンドル |
-
-### resize_window
-
-**パラメータ:**
-
-| 名前 | 型 | 必須 | 説明 |
-|---|---|---|---|
-| `hwnd` | int | 必須 | ウィンドウハンドル |
-| `width` | int | 必須 | 新しい幅（ピクセル） |
-| `height` | int | 必須 | 新しい高さ（ピクセル） |
-
-### move_window
-
-**パラメータ:**
-
-| 名前 | 型 | 必須 | 説明 |
-|---|---|---|---|
-| `hwnd` | int | 必須 | ウィンドウハンドル |
-| `x` | int | 必須 | 新しい X 座標（ピクセル） |
-| `y` | int | 必須 | 新しい Y 座標（ピクセル） |
-
-## 使い方の例
-
-### 1. ウィンドウを探してキャプチャする
+## Usage Example
 
 ```
-1. list_windows(filter="Chrome") でブラウザのウィンドウを検索
-2. 取得した hwnd を使って capture_window(hwnd=12345) でキャプチャ
+1. list_windows(filter="Chrome")       → Find browser windows
+2. preview_window(hwnd=12345)           → Quick preview to verify
+3. capture_window(hwnd=12345)           → Full-quality capture
 ```
 
-### 2. プレビューで位置を確認してから領域キャプチャ
-
-```
-1. preview_fullscreen() で画面全体のプレビューを確認
-2. キャプチャしたい領域の座標を特定
-3. capture_region(x=100, y=200, width=800, height=600) で領域をキャプチャ
-```
-
-### 3. ウィンドウを操作してからキャプチャ
-
-```
-1. list_windows(filter="メモ帳") でウィンドウを検索
-2. focus_window(hwnd=12345) でウィンドウを前面に表示
-3. resize_window(hwnd=12345, width=1280, height=720) でサイズを調整
-4. capture_window(hwnd=12345) でキャプチャ
-```
-
-## 開発
-
-### テストの実行
-
-```bash
-# 全テスト
-uv run pytest
-
-# モジュール別
-uv run pytest tests/test_display.py
-uv run pytest tests/test_window.py
-uv run pytest tests/test_capture.py
-```
-
-## ライセンス
+## License
 
 MIT
