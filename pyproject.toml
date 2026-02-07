@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.backends"
+
+[project]
+name = "windows-capture-mcp"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "mcp",
+    "pywin32",
+    "Pillow",
+]
+
+[project.scripts]
+windows-capture-mcp = "windows_capture_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/windows_capture_mcp"]
+
+[dependency-groups]
+dev = ["pytest"]
