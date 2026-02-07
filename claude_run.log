@@ -319,3 +319,16 @@ Error: Reached max turns (60)
 
 === END T-021 (exit: 0, 2026-02-07 14:37:52) ===
 === START T-022 (2026-02-07 14:37:52) ===
+T-022 完了しました。
+
+- `src/windows_capture_mcp/server.py` に以下の2つのMCPツールを登録しました：
+**実施内容:**
+  - **`list_windows`** ツール: `filter`（オプション）と`include_hidden`（オプション）パラメータを受け取り、`window.list_windows()`を呼び出して結果をJSON形式で返却
+  - **`list_displays`** ツール: パラメータなし、`display.get_displays()`を呼び出して結果をJSON形式で返却
+コミット完了: `f546aef` (task T-022)
+
+
+OK
+
+=== END T-022 (exit: 0, 2026-02-07 14:38:59) ===
+=== START T-023 (2026-02-07 14:38:59) ===
