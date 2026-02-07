@@ -18,6 +18,10 @@ uv.lock
 .vscode/
 .idea/
 
+# Secrets
+.env
+.env.*
+
 # OS
 Thumbs.db
 Desktop.ini
