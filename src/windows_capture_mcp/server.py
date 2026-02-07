@@ -175,5 +175,65 @@ def preview_region(
     return [ImageContent(type="image", data=b64, mimeType=mime_type)]
 
 
+@mcp.tool()
+def focus_window(hwnd: int) -> str:
+    """Bring a window to the foreground.
+
+    Args:
+        hwnd: Window handle.
+
+    Returns:
+        Text message with the operation result.
+    """
+    result = window.focus_window(hwnd)
+    return json.dumps(result, ensure_ascii=False)
+
+
+@mcp.tool()
+def maximize_window(hwnd: int) -> str:
+    """Maximize a window.
+
+    Args:
+        hwnd: Window handle.
+
+    Returns:
+        Text message with the operation result.
+    """
+    result = window.maximize_window(hwnd)
+    return json.dumps(result, ensure_ascii=False)
+
+
+@mcp.tool()
+def resize_window(hwnd: int, width: int, height: int) -> str:
+    """Resize a window while keeping its position.
+
+    Args:
+        hwnd: Window handle.
+        width: New width in pixels.
+        height: New height in pixels.
+
+    Returns:
+        Text message with the operation result.
+    """
+    result = window.resize_window(hwnd, width, height)
+    return json.dumps(result, ensure_ascii=False)
+
+
+@mcp.tool()
+def move_window(hwnd: int, x: int, y: int) -> str:
+    """Move a window while keeping its size.
+
+    Args:
+        hwnd: Window handle.
+        x: New x position in pixels.
+        y: New y position in pixels.
+
+    Returns:
+        Text message with the operation result.
+    """
+    result = window.move_window(hwnd, x, y)
+    return json.dumps(result, ensure_ascii=False)
+
+
 def main():
     mcp.run(transport="stdio")
