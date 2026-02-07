@@ -77,7 +77,7 @@ def _get_scale_factor(hmonitor: int) -> float:
         dpi_y = ctypes.c_uint()
         # MDT_EFFECTIVE_DPI = 0
         hr = shcore.GetDpiForMonitor(
-            hmonitor,
+            int(hmonitor),
             0,
             ctypes.byref(dpi_x),
             ctypes.byref(dpi_y),
