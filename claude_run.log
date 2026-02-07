@@ -174,3 +174,15 @@ T-011の実装内容をまとめます：
 
 === END T-011 (exit: 0, 2026-02-07 14:17:46) ===
 === START T-012 (2026-02-07 14:17:46) ===
+T-012 完了です。
+
+**実装内容:**
+- Win32 API `SetWindowPos` を使用し、ウィンドウサイズを維持したまま位置のみ変更
+- 無効な `hwnd` の場合は `ValueError` を送出
+- 返却値: `{"hwnd", "title", "x", "y", "status": "moved"}`
+
+OK
+- `src/windows_capture_mcp/window.py` に `move_window(hwnd: int, x: int, y: int) -> dict` 関数を追加
+
+=== END T-012 (exit: 0, 2026-02-07 14:18:42) ===
+=== START T-013 (2026-02-07 14:18:42) ===
