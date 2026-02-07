@@ -10,6 +10,7 @@ import win32ui
 import win32con
 from PIL import Image
 
+from windows_capture_mcp import PREVIEW_FORMAT, PREVIEW_MAX_LONG_SIDE, PREVIEW_QUALITY
 from windows_capture_mcp.display import get_display_rect
 
 
@@ -170,3 +171,28 @@ def encode_image(
     img.save(buf, **save_kwargs)
     b64 = base64.b64encode(buf.getvalue()).decode("ascii")
     return b64, mime_type
+
+
+def encode_preview(image: Image.Image) -> tuple[str, str]:
+    """Encode a Pillow Image as a low-quality preview.
+
+    The image is resized so that its longest side is at most
+    PREVIEW_MAX_LONG_SIDE pixels (aspect ratio preserved), then
+    encoded as JPEG with PREVIEW_QUALITY compression.
+
+    Args:
+        image: The Pillow Image to encode.
+
+    Returns:
+        A tuple of (base64_string, mime_type).
+    """
+    w, h = image.size
+    long_side = max(w, h)
+
+    if long_side > PREVIEW_MAX_LONG_SIDE:
+        scale = PREVIEW_MAX_LONG_SIDE / long_side
+        new_w = int(w * scale)
+        new_h = int(h * scale)
+        image = image.resize((new_w, new_h), Image.LANCZOS)
+
+    return encode_image(image, format=PREVIEW_FORMAT, quality=PREVIEW_QUALITY)

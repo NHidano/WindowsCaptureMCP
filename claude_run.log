@@ -268,3 +268,21 @@ OK
 
 === END T-017 (exit: 0, 2026-02-07 14:28:38) ===
 === START T-018 (2026-02-07 14:28:38) ===
+コミットが完了しました。
+
+## T-018: 画像エンコード関数（本番用）- 完了
+
+### 実装内容
+`src/windows_capture_mcp/capture.py` に `encode_image` 関数を追加しました:
+
+- **シグネチャ**: `encode_image(image: Image.Image, format: str = "png", quality: int = 90) -> tuple[str, str]`
+- **戻り値**: `(base64文字列, MIMEタイプ)` のタプル
+- **リサイズなし**（原寸のまま）
+- **不正フォーマット**: `ValueError` を送出
+
+OK
+- **対応フォーマット**: png, jpeg, webp
+- **JPEG RGBA対応**: RGBA/LA/P モードの画像はJPEG保存前にRGBに変換
+
+=== END T-018 (exit: 0, 2026-02-07 14:30:28) ===
+=== START T-019 (2026-02-07 14:30:28) ===
