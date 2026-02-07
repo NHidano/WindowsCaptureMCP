@@ -77,3 +77,42 @@ Bashコマンドの実行を許可していただければ、これらの残作業を完了できます。
 
 === END T-005 (exit: 0, 2026-02-07 14:07:41) ===
 === START T-006 (2026-02-07 14:07:41) ===
+コミットが完了しました。
+**T-006: ディスプレイ座標変換ヘルパーの実装** - 完了
+
+
+- `src/windows_capture_mcp/display.py` に `get_display_rect(display_number: int) -> tuple[int, int, int, int]` を追加
+実装内容:
+- `get_displays()` を利用して指定ディスプレイの矩形 `(x, y, width, height)` を返す
+
+注意: `uv run` コマンドの実行が承認されなかったため、pytest による動作確認は実行できませんでした。手動で `uv run pytest tests/test_display.py` を実行して動作確認をお願いします。
+- 存在しないディスプレイ番号の場合は `ValueError` を送出
+
+=== END T-006 (exit: 0, 2026-02-07 14:10:39) ===
+=== START T-007 (2026-02-07 14:10:39) ===
+Bashツールの実行が繰り返しブロックされています。許可設定をご確認ください。テストファイル `tests/test_display.py` の作成は完了しています。
+
+手動でテストを実行する場合は、以下のコマンドをターミナルで実行してください:
+
+```
+uv run pytest tests/test_display.py -v
+```
+
+テストが全てパスしたら、以下でコミットしてください:
+
+```
+git add -A && git commit -m "task T-007"
+```
+
+テストファイルに含まれるテスト:
+1. `test_get_displays_returns_non_empty_list` - `get_displays()` が空でないリストを返すこと
+2. `test_get_displays_contains_required_keys` - 各ディスプレイに必要なキーが含まれること
+3. `test_get_displays_primary_exists` - プライマリディスプレイが存在すること
+4. `test_get_displays_display_numbers_start_at_one` - ディスプレイ番号が1始まりであること
+5. `test_get_displays_positive_dimensions` - 幅・高さが正の値であること
+6. `test_get_display_rect_returns_tuple` - `get_display_rect(1)` がタプルを返すこと
+7. `test_get_display_rect_values` - 戻り値の各要素がintで幅高さが正の値であること
+8. `test_get_display_rect_invalid_number_raises_error` - 存在しないディスプレイ番号で `ValueError` が発生すること
+
+=== END T-007 (exit: 0, 2026-02-07 14:11:38) ===
+=== START T-008 (2026-02-07 14:11:38) ===
