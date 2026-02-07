@@ -154,3 +154,23 @@ OK
 
 === END T-010 (exit: 0, 2026-02-07 14:16:12) ===
 === START T-011 (2026-02-07 14:16:12) ===
+テスト実行コマンドが承認待ちのままです。承認いただければテストを実行して結果を確認します。
+T-011の実装内容をまとめます：
+
+
+**実装内容:**
+## T-011: resize_window 関数の実装 - 完了
+- `src/windows_capture_mcp/window.py` に `resize_window(hwnd: int, width: int, height: int) -> dict` を追加
+
+- `GetWindowRect` で現在の位置を取得し、位置は維持してサイズのみ変更
+- 無効な `hwnd` に対しては `ValueError` を送出
+- 既存の `focus_window`, `maximize_window` と同じパターンに準拠
+
+**コミット:** `e16f69e` - "task T-011"
+
+テスト実行の承認をいただければ、テストの確認も行います。
+- `win32gui.SetWindowPos` を使用してウィンドウサイズを変更
+- `SWP_NOZORDER | SWP_NOACTIVATE` フラグにより、ウィンドウのZ順序やアクティブ状態を変更しない
+
+=== END T-011 (exit: 0, 2026-02-07 14:17:46) ===
+=== START T-012 (2026-02-07 14:17:46) ===

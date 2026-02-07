@@ -156,3 +156,32 @@ def resize_window(hwnd: int, width: int, height: int) -> dict:
 
     title = win32gui.GetWindowText(hwnd)
     return {"hwnd": hwnd, "title": title, "width": width, "height": height, "status": "resized"}
+
+
+def move_window(hwnd: int, x: int, y: int) -> dict:
+    """Move a window while keeping its size.
+
+    Args:
+        hwnd: Window handle.
+        x: New x position in pixels.
+        y: New y position in pixels.
+
+    Returns:
+        Dict with status information.
+
+    Raises:
+        ValueError: If the hwnd is invalid.
+    """
+    if not win32gui.IsWindow(hwnd):
+        raise ValueError(f"Invalid window handle: {hwnd}")
+
+    rect = win32gui.GetWindowRect(hwnd)
+    width = rect[2] - rect[0]
+    height = rect[3] - rect[1]
+
+    win32gui.SetWindowPos(
+        hwnd, 0, x, y, width, height, win32con.SWP_NOZORDER | win32con.SWP_NOACTIVATE
+    )
+
+    title = win32gui.GetWindowText(hwnd)
+    return {"hwnd": hwnd, "title": title, "x": x, "y": y, "status": "moved"}
