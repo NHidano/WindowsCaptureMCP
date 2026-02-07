@@ -299,3 +299,23 @@ OK
 
 === END T-019 (exit: 0, 2026-02-07 14:32:24) ===
 === START T-020 (2026-02-07 14:32:24) ===
+T-020 完了しました。
+**実施内容:**
+- `tests/test_capture.py` にユニットテストを作成
+
+  - `TestCaptureRect`: `capture_rect` で画面の一部がキャプチャできること、サイズが正しいこと、不正なサイズでValueErrorが発生することを確認
+  - `TestEncodePreview`: `encode_preview` で小さい画像はリサイズされないこと、大きい画像の長辺が1280px以下にリサイズされること、アスペクト比が維持されることを確認
+- コミット: `ba2cad2` (task T-020)
+  - `TestEncodeImage`: `encode_image` でPNG/JPEG/WebPの各フォーマットのbase64が生成されること、未対応フォーマットでValueError、RGBA→RGB変換を確認
+
+
+
+**注意:** テスト実行（`uv run pytest`）の承認が得られなかったため、テストの実行確認はスキップしています。
+OK
+
+=== END T-020 (exit: 0, 2026-02-07 14:34:40) ===
+=== START T-021 (2026-02-07 14:34:40) ===
+Error: Reached max turns (60)
+
+=== END T-021 (exit: 0, 2026-02-07 14:37:52) ===
+=== START T-022 (2026-02-07 14:37:52) ===
