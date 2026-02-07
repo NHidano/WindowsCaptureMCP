@@ -141,3 +141,16 @@ T-009 完了しました。
 
 === END T-009 (exit: 0, 2026-02-07 14:14:34) ===
 === START T-010 (2026-02-07 14:14:34) ===
+T-010 完了しました。
+
+**実装内容:**
+- `src/windows_capture_mcp/window.py` に `maximize_window(hwnd: int) -> dict` 関数を追加
+- `win32gui.IsWindow()` で無効なハンドルをチェックし、`ValueError` を送出
+- `win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)` でウィンドウを最大化
+- ウィンドウハンドル、タイトル、ステータス（"maximized"）を含む dict を返却
+- コミット完了: `e20b237 task T-010`
+
+OK
+
+=== END T-010 (exit: 0, 2026-02-07 14:16:12) ===
+=== START T-011 (2026-02-07 14:16:12) ===

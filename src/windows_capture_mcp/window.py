@@ -128,3 +128,31 @@ def maximize_window(hwnd: int) -> dict:
 
     title = win32gui.GetWindowText(hwnd)
     return {"hwnd": hwnd, "title": title, "status": "maximized"}
+
+
+def resize_window(hwnd: int, width: int, height: int) -> dict:
+    """Resize a window while keeping its position.
+
+    Args:
+        hwnd: Window handle.
+        width: New width in pixels.
+        height: New height in pixels.
+
+    Returns:
+        Dict with status information.
+
+    Raises:
+        ValueError: If the hwnd is invalid.
+    """
+    if not win32gui.IsWindow(hwnd):
+        raise ValueError(f"Invalid window handle: {hwnd}")
+
+    rect = win32gui.GetWindowRect(hwnd)
+    x, y = rect[0], rect[1]
+
+    win32gui.SetWindowPos(
+        hwnd, 0, x, y, width, height, win32con.SWP_NOZORDER | win32con.SWP_NOACTIVATE
+    )
+
+    title = win32gui.GetWindowText(hwnd)
+    return {"hwnd": hwnd, "title": title, "width": width, "height": height, "status": "resized"}
