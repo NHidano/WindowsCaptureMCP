@@ -142,10 +142,12 @@ def resize_window(hwnd: int, width: int, height: int) -> dict:
         Dict with status information.
 
     Raises:
-        ValueError: If the hwnd is invalid.
+        ValueError: If the hwnd is invalid or dimensions are not positive.
     """
     if not win32gui.IsWindow(hwnd):
         raise ValueError(f"Invalid window handle: {hwnd}")
+    if width <= 0 or height <= 0:
+        raise ValueError(f"Width and height must be positive, got {width}x{height}")
 
     rect = win32gui.GetWindowRect(hwnd)
     x, y = rect[0], rect[1]
