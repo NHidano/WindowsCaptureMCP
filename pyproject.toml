@@ -31,6 +31,7 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/Hidano/WindowsCaptureMCP"
 Repository = "https://github.com/Hidano/WindowsCaptureMCP"
+PyPI = "https://pypi.org/project/windows-capture-mcp/"
 
 [project.scripts]
 windows-capture-mcp = "windows_capture_mcp.server:main"

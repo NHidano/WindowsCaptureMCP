@@ -32,9 +32,17 @@ pip install windows-capture-mcp
 
 ### Claude Code
 
+Run the following command to register the MCP server:
+
 ```bash
+# Register for all projects (user scope)
 claude mcp add windows-capture-mcp -s user -- uvx windows-capture-mcp
+
+# Register for the current project only (project scope)
+claude mcp add windows-capture-mcp -s project -- uvx windows-capture-mcp
 ```
+
+After registration, restart Claude Code to load the new MCP server. You can verify it is running with `/mcp`.
 
 ### Claude Desktop
 

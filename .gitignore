@@ -28,3 +28,6 @@ Desktop.ini
 
 # Claude Code
 .claude/
+claude_run.log
+tasks.txt
+runtask.ps1
