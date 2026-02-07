@@ -11,6 +11,7 @@ from windows_capture_mcp.capture import (
     capture_region_image,
     capture_window_image,
     encode_image,
+    encode_preview,
 )
 
 mcp = FastMCP("windows-capture-mcp")
@@ -110,6 +111,67 @@ def capture_region(
     """
     img = capture_region_image(x, y, width, height, display_number)
     b64, mime_type = encode_image(img, format=format, quality=quality)
+    return [ImageContent(type="image", data=b64, mimeType=mime_type)]
+
+
+@mcp.tool()
+def preview_window(hwnd: int) -> list[ImageContent]:
+    """Capture a window and return a low-quality JPEG preview image.
+
+    Useful for quickly checking window content before taking a full capture.
+
+    Args:
+        hwnd: Window handle to capture.
+
+    Returns:
+        MCP image content with a low-quality JPEG preview.
+    """
+    img = capture_window_image(hwnd)
+    b64, mime_type = encode_preview(img)
+    return [ImageContent(type="image", data=b64, mimeType=mime_type)]
+
+
+@mcp.tool()
+def preview_fullscreen(display_number: int = 1) -> list[ImageContent]:
+    """Capture the full screen and return a low-quality JPEG preview image.
+
+    Useful for quickly checking screen content before taking a full capture.
+
+    Args:
+        display_number: 1-based display number. Default is 1.
+
+    Returns:
+        MCP image content with a low-quality JPEG preview.
+    """
+    img = capture_fullscreen_image(display_number)
+    b64, mime_type = encode_preview(img)
+    return [ImageContent(type="image", data=b64, mimeType=mime_type)]
+
+
+@mcp.tool()
+def preview_region(
+    x: int,
+    y: int,
+    width: int,
+    height: int,
+    display_number: int = 1,
+) -> list[ImageContent]:
+    """Capture a specific region and return a low-quality JPEG preview image.
+
+    Useful for quickly checking a region before taking a full capture.
+
+    Args:
+        x: Left coordinate relative to the display.
+        y: Top coordinate relative to the display.
+        width: Width in pixels.
+        height: Height in pixels.
+        display_number: 1-based display number. Default is 1.
+
+    Returns:
+        MCP image content with a low-quality JPEG preview.
+    """
+    img = capture_region_image(x, y, width, height, display_number)
+    b64, mime_type = encode_preview(img)
     return [ImageContent(type="image", data=b64, mimeType=mime_type)]
 
 

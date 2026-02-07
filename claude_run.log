@@ -332,3 +332,17 @@ OK
 
 === END T-022 (exit: 0, 2026-02-07 14:38:59) ===
 === START T-023 (2026-02-07 14:38:59) ===
+T-023が完了しました。
+
+**実施内容**: `server.py`にキャプチャツール3つを登録しました。
+
+1. **`capture_window`** - `hwnd`, `format`, `quality` パラメータで指定ウィンドウをキャプチャし、MCP `ImageContent`として返却
+3. **`capture_region`** - `x`, `y`, `width`, `height`, `display_number`, `format`, `quality` パラメータで指定領域をキャプチャし、MCP `ImageContent`として返却
+2. **`capture_fullscreen`** - `display_number`, `format`, `quality` パラメータでフルスクリーンキャプチャし、MCP `ImageContent`として返却
+
+各ツールは既存の`capture.py`の関数（`capture_window_image`, `capture_fullscreen_image`, `capture_region_image`, `encode_image`）を呼び出し、結果を`mcp.types.ImageContent`でラップして返します。
+
+OK
+
+=== END T-023 (exit: 0, 2026-02-07 14:41:47) ===
+=== START T-024 (2026-02-07 14:41:47) ===
