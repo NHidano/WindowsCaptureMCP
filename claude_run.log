@@ -286,3 +286,16 @@ OK
 
 === END T-018 (exit: 0, 2026-02-07 14:30:28) ===
 === START T-019 (2026-02-07 14:30:28) ===
+T-019の実装が完了しました。
+
+**実装内容:**
+- `src/windows_capture_mcp/capture.py` に `encode_preview(image: Image.Image) -> tuple[str, str]` を追加
+- 定数 `PREVIEW_QUALITY` (30), `PREVIEW_MAX_LONG_SIDE` (1280), `PREVIEW_FORMAT` ("jpeg") を `__init__.py` からインポートして使用
+- 長辺が1280pxを超える場合、アスペクト比を維持してリサイズ
+- `encode_image` を再利用してJPEG quality=30でエンコード
+- base64文字列とMIMEタイプのタプルを返却
+
+OK
+
+=== END T-019 (exit: 0, 2026-02-07 14:32:24) ===
+=== START T-020 (2026-02-07 14:32:24) ===
