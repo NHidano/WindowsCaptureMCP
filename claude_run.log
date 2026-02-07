@@ -130,3 +130,14 @@ T-008 完了しました。
 
 === END T-008 (exit: 0, 2026-02-07 14:13:36) ===
 === START T-009 (2026-02-07 14:13:36) ===
+T-009 完了しました。
+**実装内容:**
+- `src/windows_capture_mcp/window.py` に `focus_window(hwnd: int) -> dict` 関数を追加
+
+  - `win32gui.IsWindow()` で無効なハンドルをチェックし、無効な場合は `ValueError` を送出
+  - 最小化されている場合は `ShowWindow(SW_RESTORE)` で復元
+  - `SetForegroundWindow` と `BringWindowToTop` でウィンドウを前面に表示
+  - `{"hwnd", "title", "status": "focused"}` を返却
+
+=== END T-009 (exit: 0, 2026-02-07 14:14:34) ===
+=== START T-010 (2026-02-07 14:14:34) ===

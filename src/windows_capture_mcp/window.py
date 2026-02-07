@@ -107,3 +107,24 @@ def focus_window(hwnd: int) -> dict:
 
     title = win32gui.GetWindowText(hwnd)
     return {"hwnd": hwnd, "title": title, "status": "focused"}
+
+
+def maximize_window(hwnd: int) -> dict:
+    """Maximize a window.
+
+    Args:
+        hwnd: Window handle.
+
+    Returns:
+        Dict with status information.
+
+    Raises:
+        ValueError: If the hwnd is invalid.
+    """
+    if not win32gui.IsWindow(hwnd):
+        raise ValueError(f"Invalid window handle: {hwnd}")
+
+    win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)
+
+    title = win32gui.GetWindowText(hwnd)
+    return {"hwnd": hwnd, "title": title, "status": "maximized"}
