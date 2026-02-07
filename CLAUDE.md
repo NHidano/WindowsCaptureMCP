@@ -19,6 +19,28 @@ WindowsCaptureMCP は、Windowsのスクリーンショットを撮影し、base
 
 - ユーザーとのやり取りは**日本語**で行うこと
 
+## ビルド・実行
+
+```bash
+# 依存インストール
+uv sync
+
+# MCPサーバー起動
+uv run windows-capture-mcp
+```
+
+## テスト
+
+```bash
+# 全テスト実行
+uv run pytest
+
+# モジュール別テスト実行
+uv run pytest tests/test_display.py
+uv run pytest tests/test_window.py
+uv run pytest tests/test_capture.py
+```
+
 ## ステータス
 
-このリポジトリは初期化直後の状態です。ビルドシステム、ソースコード、テストはまだ存在しません。
+実装完了。MCPサーバーとして全機能（ウィンドウ一覧取得、ディスプレイ一覧取得、スクリーンキャプチャ、プレビュー、ウィンドウ操作）が利用可能です。

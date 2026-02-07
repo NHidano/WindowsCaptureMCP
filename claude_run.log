@@ -381,3 +381,29 @@ OK
 
 === END T-025 (exit: 0, 2026-02-07 14:44:57) ===
 === START T-026 (2026-02-07 14:44:57) ===
+T-026 完了しました。
+
+**実施内容: エラーハンドリングの実装**
+
+### server.py の変更:
+- **4つのバリデーション関数を追加**: `_validate_format`, `_validate_quality`, `_validate_size`, `_validate_display_number`
+- **全12ツール関数にtry-except追加**: ValueErrorはそのまま再送出、その他の例外は明確なエラーメッセージ付きのValueErrorに変換
+
+- **入力バリデーション**: 不正なフォーマット、品質値(1-100範囲外)、負のサイズ、無効なディスプレイ番号を検出
+### window.py の変更:
+- `resize_window`にwidth/heightの正値バリデーションを追加
+コミット済み: `task T-026` (1e14a1f)
+
+OK
+
+
+=== END T-026 (exit: 0, 2026-02-07 14:51:02) ===
+=== START T-027 (2026-02-07 14:51:02) ===
+Error: Reached max turns (60)
+
+=== END T-027 (exit: 0, 2026-02-07 14:53:16) ===
+=== START T-028 (2026-02-07 14:53:16) ===
+Error: Reached max turns (60)
+
+=== END T-028 (exit: 0, 2026-02-07 14:58:22) ===
+=== START T-029 (2026-02-07 14:58:22) ===
