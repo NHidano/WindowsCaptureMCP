@@ -186,3 +186,23 @@ OK
 
 === END T-012 (exit: 0, 2026-02-07 14:18:42) ===
 === START T-013 (2026-02-07 14:18:42) ===
+T-013が完了しました。
+
+**T-013: window.py のユニットテスト作成**
+
+`tests/test_window.py` に以下のテストを実装しました:
+- **`TestListWindows`**:
+
+  - `list_windows()` が空でないリストを返すことを確認
+  - 各ウィンドウに必要なキー（`hwnd`, `title`, `process_name`, `x`, `y`, `width`, `height`）が含まれることを確認
+- **`TestFocusWindow`**: 無効なhwnd（0）でValueErrorが発生することを確認
+- **`TestMaximizeWindow`**: 無効なhwndでValueErrorが発生することを確認
+- **`TestResizeWindow`**: 無効なhwndでValueErrorが発生することを確認
+- **`TestMoveWindow`**: 無効なhwndでValueErrorが発生することを確認
+
+コミット完了: `bcf4014 task T-013`
+  - `include_hidden=True` で結果数が増える（または同数以上になる）ことを確認
+  - フィルタ機能のテスト（存在するウィンドウ名の部分一致検索）
+
+=== END T-013 (exit: 0, 2026-02-07 14:20:35) ===
+=== START T-014 (2026-02-07 14:20:35) ===
