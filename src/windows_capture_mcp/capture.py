@@ -1,7 +1,9 @@
 """Screen capture logic."""
 
+import base64
 import ctypes
 import ctypes.wintypes
+import io
 
 import win32gui
 import win32ui
@@ -122,3 +124,49 @@ def capture_region_image(
     abs_x = disp_x + x
     abs_y = disp_y + y
     return capture_rect(abs_x, abs_y, width, height)
+
+
+_FORMAT_MIME = {
+    "png": "image/png",
+    "jpeg": "image/jpeg",
+    "webp": "image/webp",
+}
+
+
+def encode_image(
+    image: Image.Image, format: str = "png", quality: int = 90
+) -> tuple[str, str]:
+    """Encode a Pillow Image to a base64 string.
+
+    Args:
+        image: The Pillow Image to encode.
+        format: Image format – "png", "jpeg", or "webp".
+        quality: Compression quality (1-100). Used for jpeg and webp.
+
+    Returns:
+        A tuple of (base64_string, mime_type).
+
+    Raises:
+        ValueError: If the format is not supported.
+    """
+    fmt = format.lower()
+    if fmt not in _FORMAT_MIME:
+        raise ValueError(
+            f"Unsupported format: {format!r}. Use one of: {', '.join(_FORMAT_MIME)}"
+        )
+
+    mime_type = _FORMAT_MIME[fmt]
+
+    buf = io.BytesIO()
+    save_kwargs: dict = {"format": fmt.upper() if fmt != "jpeg" else "JPEG"}
+    if fmt in ("jpeg", "webp"):
+        save_kwargs["quality"] = quality
+
+    # JPEG does not support RGBA; convert if necessary
+    img = image
+    if fmt == "jpeg" and image.mode in ("RGBA", "LA", "P"):
+        img = image.convert("RGB")
+
+    img.save(buf, **save_kwargs)
+    b64 = base64.b64encode(buf.getvalue()).decode("ascii")
+    return b64, mime_type
