@@ -5,12 +5,32 @@ build-backend = "hatchling.build"
 [project]
 name = "windows-capture-mcp"
 version = "0.1.0"
+description = "MCP server for capturing Windows screenshots and sharing them as base64 images"
 requires-python = ">=3.11"
+license = "MIT"
+authors = [
+    { name = "Hidano" },
+]
+readme = "README.md"
+keywords = ["mcp", "screenshot", "windows", "screen-capture", "llm"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
 dependencies = [
     "mcp",
     "pywin32",
     "Pillow",
 ]
+
+[project.urls]
+Homepage = "https://github.com/Hidano/WindowsCaptureMCP"
+Repository = "https://github.com/Hidano/WindowsCaptureMCP"
 
 [project.scripts]
 windows-capture-mcp = "windows_capture_mcp.server:main"
