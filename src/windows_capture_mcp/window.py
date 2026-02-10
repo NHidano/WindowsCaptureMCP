@@ -86,6 +86,9 @@ def list_windows(
 def focus_window(hwnd: int) -> dict:
     """Bring a window to the foreground.
 
+    Uses AttachThreadInput and Alt key simulation to bypass the
+    foreground lock restriction when called from a background process.
+
     Args:
         hwnd: Window handle.
 
@@ -102,8 +105,61 @@ def focus_window(hwnd: int) -> dict:
     if win32gui.IsIconic(hwnd):
         win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
 
-    win32gui.SetForegroundWindow(hwnd)
-    win32gui.BringWindowToTop(hwnd)
+    VK_MENU = 0x12
+    KEYEVENTF_KEYUP = 0x0002
+
+    target_thread_id, _ = win32process.GetWindowThreadProcessId(hwnd)
+    current_thread_id = ctypes.windll.kernel32.GetCurrentThreadId()
+    threads_attached = False
+
+    # Simulate Alt key press to bypass foreground lock timeout
+    ctypes.windll.user32.keybd_event(VK_MENU, 0, 0, 0)
+    try:
+        # Attach input threads if they differ
+        if current_thread_id != target_thread_id:
+            try:
+                win32process.AttachThreadInput(current_thread_id, target_thread_id, True)
+                threads_attached = True
+            except Exception:
+                pass
+
+        try:
+            win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
+            win32gui.SetForegroundWindow(hwnd)
+            win32gui.BringWindowToTop(hwnd)
+        except Exception:
+            # Fallback: temporarily disable foreground lock timeout
+            SPI_SETFOREGROUNDLOCKTIMEOUT = 0x2001
+            SPIF_SENDCHANGE = 0x0002
+            old_timeout = ctypes.wintypes.DWORD()
+            ctypes.windll.user32.SystemParametersInfoW(
+                0x2000, 0, ctypes.byref(old_timeout), 0  # SPI_GETFOREGROUNDLOCKTIMEOUT
+            )
+            ctypes.windll.user32.SystemParametersInfoW(
+                SPI_SETFOREGROUNDLOCKTIMEOUT, 0, 0, SPIF_SENDCHANGE
+            )
+            try:
+                win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
+                win32gui.SetForegroundWindow(hwnd)
+                win32gui.BringWindowToTop(hwnd)
+            finally:
+                ctypes.windll.user32.SystemParametersInfoW(
+                    SPI_SETFOREGROUNDLOCKTIMEOUT,
+                    0,
+                    old_timeout.value,
+                    SPIF_SENDCHANGE,
+                )
+    finally:
+        # Release Alt key
+        ctypes.windll.user32.keybd_event(VK_MENU, 0, KEYEVENTF_KEYUP, 0)
+        # Detach threads
+        if threads_attached:
+            try:
+                win32process.AttachThreadInput(
+                    current_thread_id, target_thread_id, False
+                )
+            except Exception:
+                pass
 
     title = win32gui.GetWindowText(hwnd)
     return {"hwnd": hwnd, "title": title, "status": "focused"}
